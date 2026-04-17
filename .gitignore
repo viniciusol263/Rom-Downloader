@@ -39,3 +39,10 @@
 
 # debug information files
 *.dwo
+
+x64/
+Debug/
+Generated Files/
+packages/
+vcpkg_installed/
+.vs/

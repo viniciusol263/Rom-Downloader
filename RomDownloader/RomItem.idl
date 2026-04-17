@@ -1,0 +1,12 @@
+namespace RomDownloader
+{
+	runtimeclass RomItem
+	{
+		RomItem();
+		RomItem(String Name, String Size, String ImageSrc);
+
+		String Name;
+		String Size;
+		String ImageSrc;
+	}
+}

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="RomDownloader.BlankPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RomDownloader"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d">
+
+    <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup>
+            <VisualState x:Name="WideState">
+                <VisualState.StateTriggers>
+                    <AdaptiveTrigger MinWindowWidth="800"/>
+                </VisualState.StateTriggers>
+            </VisualState>
+
+            <VisualState x:Name="NarrowState">
+                <VisualState.StateTriggers>
+                    <AdaptiveTrigger MinWindowWidth="0"/>
+                </VisualState.StateTriggers>
+            </VisualState>
+        </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel x:Name="LayoutRoot" Margin="50,10,50,10" Spacing="12" >
+            <controls:WebView2 x:Name="WebViewClient"/>
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Download Path:" Grid.Column="0" VerticalAlignment="Center" />
+                <TextBox x:Name="DownloadTextBox" PlaceholderText="Choose where the files should be downloaded" Grid.Column="1" />
+                <Button x:Name="DownloadFolderButton" Content="Open Folder" Click="DownloadFolderButtonClick" Grid.Column="2" />
+            </Grid>
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Roms to Download:" Grid.Column="0" VerticalAlignment="Center" />
+                <TextBox x:Name="RomsTextBox" PlaceholderText="Write the ROM name and separate with ; each entry" HorizontalAlignment="Stretch" Grid.Column="1" />
+            </Grid>
+            <ProgressBar x:Name="ProgressBarDownload" Height="5" MinHeight="5" Value="0" />
+            <Button x:Name="DownloadButton" Content="Download" Click="DownloadClick" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <ListView x:Name="DownloadRomList" Height="300" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Items}" BorderBrush="Gray" BorderThickness="1">
+                <ListView.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid Padding="12" Background="{ThemeResource SystemBaseLowColor}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="300"/>
+                                <ColumnDefinition Width="300"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="ROM System" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                            <TextBlock Text="ROM Name" Grid.Column="1" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                            <TextBlock Text="ROM Size" Grid.Column="2" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.HeaderTemplate>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="local:RomItem">
+                        <Border BorderBrush="#33FFFFFF"
+                          BorderThickness="0,0,0,1">
+                            <Grid Padding="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="290"/>
+                                    <ColumnDefinition Width="300"/>
+                                    <ColumnDefinition Width="200"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Width="100" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                    <Image.Source>
+                                        <SvgImageSource UriSource="{x:Bind ImageSrc}"/>
+                                    </Image.Source>
+                                </Image>
+                                <TextBlock Text="{x:Bind Name}" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100"/>
+                                <TextBlock Text="{x:Bind Size}" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Region:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <StackPanel Margin="0">
+                    <RadioButton x:Name="USARegionRadio" Content="USA" GroupName="Region" IsChecked="true" MinWidth="60"/>
+                </StackPanel>
+                <StackPanel Margin="0">
+                    <RadioButton x:Name="EURRegionRadio" Content="EUR" GroupName="Region" MinWidth="60"/>
+                </StackPanel>
+                <StackPanel Margin="0">
+                    <RadioButton x:Name="JPNRegionRadio" Content="JPN" GroupName="Region" MinWidth="60"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>
