@@ -1,0 +1,12 @@
+import "RomItem.idl";
+
+namespace RomDownloader
+{
+    [default_interface]
+    runtimeclass BlankPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        BlankPage();
+        void SetPrimaryWindow(Microsoft.UI.Xaml.Window window);
+        Windows.Foundation.Collections.IObservableVector<RomItem> Items{ get; };
+    }
+}

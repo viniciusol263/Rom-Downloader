@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="RomDownloader/RomDownloader.vcxproj" Id="7b1157b6-4818-4744-8a03-1a4c11d8c59f">
+    <Deploy />
+  </Project>
+</Solution>
