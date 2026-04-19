@@ -16,14 +16,14 @@ namespace Controllers
 		co_return folder.Path();
 	}
 
-	Foundation::IAsyncOperationWithProgress<Foundation::Collections::IMap<StorageFile,winrt::hstring>,int> ButtonController::DownloadButtonAction(winrt::hstring roms, winrt::hstring region)
+	Foundation::IAsyncOperationWithProgress<Foundation::Collections::IMap<StorageFile,winrt::hstring>,int> ButtonController::DownloadButtonAction(winrt::hstring roms, winrt::hstring region, winrt::hstring system)
 	{
-		if (roms == L"" || m_storageModule.GetDownloadPath() == nullptr) co_return {};
+		if (roms == L"" || system == L"" || m_storageModule.GetDownloadPath() == nullptr) co_return winrt::single_threaded_map<StorageFile, winrt::hstring>();
 		auto returnMap = winrt::single_threaded_map<StorageFile, winrt::hstring>();
 
 		auto progress = co_await winrt::get_progress_token();
 
-		auto romSystems = co_await m_networkModule.DownloadRoms(roms, region, co_await m_storageModule.GetTemporaryPath(), [progress](int value) {
+		auto romSystems = co_await m_networkModule.DownloadRoms(roms, region, system, co_await m_storageModule.GetTemporaryPath(), [progress](int value) {
 			progress(value);
 			});
 
@@ -41,7 +41,6 @@ namespace Controllers
 					
 				if (key.find(fileName) != std::string::npos)
 				{
-
 					returnMap.Insert(file,romSystem.Value());
 				}
 			}

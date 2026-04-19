@@ -46,3 +46,4 @@ Generated Files/
 packages/
 vcpkg_installed/
 .vs/
+.vscode/

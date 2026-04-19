@@ -54,6 +54,9 @@ namespace winrt::RomDownloader::implementation
     {
         InitializeComponent();
 		m_items = winrt::single_threaded_observable_vector<RomDownloader::RomItem>();
+		m_comboItems = winrt::single_threaded_observable_vector<winrt::hstring>();
+		for (auto const& system : Constants::SystemsUrl) 
+            m_comboItems.Append(winrt::to_hstring(system.first));
     }
 
     void BlankPage::SetPrimaryWindow(winrt::Microsoft::UI::Xaml::Window const& window)
@@ -72,7 +75,7 @@ namespace winrt::RomDownloader::implementation
     fire_and_forget BlankPage::DownloadClick(IInspectable const& sender, RoutedEventArgs const& args)
     {
         auto dispatcher = DispatcherQueue();
-        auto op = m_buttonController.DownloadButtonAction(RomsTextBox().Text(), GetRegion());
+        auto op = m_buttonController.DownloadButtonAction(RomsTextBox().Text(), GetRegion(), GetSystem());
         auto found = [this](RomDownloader::RomItem const& item) {
             for (auto rom : m_items)
             {
@@ -111,9 +114,45 @@ namespace winrt::RomDownloader::implementation
         }
     }
 
+    fire_and_forget BlankPage::ClickedRightTapped(winrt::Windows::Foundation::IInspectable const& , winrt::Microsoft::UI::Xaml::Input::RightTappedRoutedEventArgs const& e)
+    {
+        auto element = e.OriginalSource().as<Microsoft::UI::Xaml::FrameworkElement>();
+
+        while (element)
+        {
+            if (auto container = element.try_as<Microsoft::UI::Xaml::Controls::ListViewItem>())
+            {
+                DownloadRomList().SelectedItem(container.Content());
+                break;
+            }
+            element = element.Parent().try_as<Microsoft::UI::Xaml::FrameworkElement>();
+        }
+        co_return;
+    }
+
+    fire_and_forget BlankPage::StartRomClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args)
+    {
+		auto romItem = DownloadRomList().SelectedItem().try_as<RomDownloader::RomItem>();
+
+        if (!romItem) co_return;
+
+        auto name = romItem.Name();
+        co_return;
+    }
+
+    fire_and_forget BlankPage::OpenRomLocationClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args)
+    {
+        co_return;
+    }
+
     winrt::Windows::Foundation::Collections::IObservableVector<RomDownloader::RomItem> BlankPage::Items()
     {
         return m_items;
+    }
+
+    winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> BlankPage::ComboItems()
+    {
+		return m_comboItems;
     }
 
     winrt::hstring BlankPage::GetRegion()
@@ -126,6 +165,11 @@ namespace winrt::RomDownloader::implementation
             return L"Japan";
     }
 
+    winrt::hstring BlankPage::GetSystem()
+    {
+        if (SystemComboBox().SelectedItem() == nullptr) return L"";
+		return SystemComboBox().SelectedItem().as<winrt::hstring>();
+    }
 
 
 }
