@@ -40,7 +40,8 @@ namespace Modules
 	public:
 		NetworkModule();
 
-		Foundation::IAsyncOperationWithProgress<Foundation::Collections::IMap<winrt::hstring, winrt::hstring>, int>  DownloadRoms(winrt::hstring romsToDownload, winrt::hstring region, StorageFolder downloadPath, std::function<void(int)> progressCallback);
+		Foundation::IAsyncOperationWithProgress<Foundation::Collections::IMap<winrt::hstring, winrt::hstring>, int>  
+			DownloadRoms(winrt::hstring romsToDownload, winrt::hstring region, winrt::hstring system, StorageFolder downloadPath, std::function<void(int)> progressCallback);
 	private:
 		HttpClient m_client;
 		Handlers::ParserHelper m_parser;
@@ -52,7 +53,7 @@ namespace Modules
 		Foundation::IAsyncOperationWithProgress<winrt::hstring, int> GetWebViewRequests(WebView2 const& webView);
 		std::vector<std::pair<std::string, std::string>> ParseDOMContent(winrt::hstring const& content);
 		Foundation::IAsyncOperation<winrt::hstring> StreamReadContent(IHttpContent const& content);
-		std::vector<std::pair<std::string, std::string>>  RegexExtractLinks(std::vector<std::string> const& romList, std::string region);
+		std::vector<std::pair<std::string, std::string>>  RegexExtractLinks(std::vector<std::string> const& romList, std::string region, std::string system);
 	};
 }
 

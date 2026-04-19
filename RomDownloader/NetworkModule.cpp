@@ -40,13 +40,14 @@ namespace Modules
 		GetUrlContentListing();
 	}
 
-	Foundation::IAsyncOperationWithProgress<Foundation::Collections::IMap<winrt::hstring, winrt::hstring>,int> NetworkModule::DownloadRoms(winrt::hstring romsToDownload, winrt::hstring region, StorageFolder downloadPath, std::function<void(int)> progressCallback)
+	Foundation::IAsyncOperationWithProgress<Foundation::Collections::IMap<winrt::hstring, winrt::hstring>,int> 
+		NetworkModule::DownloadRoms(winrt::hstring romsToDownload, winrt::hstring region, winrt::hstring system, StorageFolder downloadPath, std::function<void(int)> progressCallback)
 	{
 		auto _romsToDownload = winrt::to_string(romsToDownload);
 		std::string_view romsToDownloadView{ _romsToDownload };
 
 		auto romList = m_parser.GetRomList(romsToDownloadView);
-		auto downloadLinks = RegexExtractLinks(romList, winrt::to_string(region));
+		auto downloadLinks = RegexExtractLinks(romList, winrt::to_string(region), winrt::to_string(system));
 		auto map = winrt::single_threaded_map<winrt::hstring, winrt::hstring>();
 
 		for (auto const& link : downloadLinks)
@@ -82,6 +83,7 @@ namespace Modules
 		co_return map;
 	}
 
+
 	Foundation::IAsyncAction NetworkModule::GetUrlContentListing()
 	{	
 		for (auto& url : m_urls)
@@ -91,7 +93,8 @@ namespace Modules
 			if (!response.IsSuccessStatusCode()) continue;
 
 			auto content = co_await StreamReadContent(response.Content());
-			m_romsToDownload.emplace_back(url.first,  ParseDOMContent(content));
+			auto parsedContent = ParseDOMContent(content);
+			m_romsToDownload.emplace_back(url.first, parsedContent);
 		}
 	}
 
@@ -185,7 +188,7 @@ namespace Modules
 		co_return winrt::to_hstring(html);
 	}
 
-	std::vector<std::pair<std::string,std::string>> NetworkModule::RegexExtractLinks(std::vector<std::string> const& romList, std::string region)
+	std::vector<std::pair<std::string,std::string>> NetworkModule::RegexExtractLinks(std::vector<std::string> const& romList, std::string region, std::string system)
 	{
 		std::vector<std::pair<std::string, std::string>> extractedLinks;
 		auto romsToBeSearched = romList;
@@ -194,10 +197,10 @@ namespace Modules
 		auto regexPattern = [this, region](std::string const& safeName) {
 			return std::format("([A-Z]?)(\\/?)({}.*\\(((World.*)|({}.*))\\).*\\.(7z|zip))", safeName, region);
 		};
-		auto test = m_romsToDownload;
-		for (auto romListing : m_romsToDownload)
+		for (auto const& romListing : m_romsToDownload)
 		{
-			std::for_each(romListing.romList.begin(), romListing.romList.end(), [this, regexPattern, &romsToBeSearched, &extractedLinks, romListing](auto const& romData)
+			if (romListing.romPack != system) continue;
+			std::for_each(romListing.romList.begin(), romListing.romList.end(), [this, regexPattern, &romsToBeSearched, &extractedLinks, &romListing](auto const& romData)
 			{
 				for (auto rom = romsToBeSearched.begin(); rom != romsToBeSearched.end();)
 				{

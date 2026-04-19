@@ -29,7 +29,7 @@ namespace Modules
 
 	Foundation::IAsyncOperation<Foundation::Collections::IVectorView<StorageFile>> StorageModule::ExtractFilesFromDownloadPath()
 	{
-		if (m_downloadPath == nullptr) co_return {};
+		if (m_downloadPath == nullptr) co_return Foundation::Collections::IVectorView<StorageFile>();
 		StorageFolder downloadPath = co_await GetTemporaryPath();
 		Foundation::Collections::IVectorView<StorageFile> extractedFiles;
 		auto isZip = [](StorageFile fileName) {

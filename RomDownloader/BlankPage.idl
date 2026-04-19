@@ -8,5 +8,6 @@ namespace RomDownloader
         BlankPage();
         void SetPrimaryWindow(Microsoft.UI.Xaml.Window window);
         Windows.Foundation.Collections.IObservableVector<RomItem> Items{ get; };
+        Windows.Foundation.Collections.IObservableVector<String> ComboItems{ get; };
     }
 }

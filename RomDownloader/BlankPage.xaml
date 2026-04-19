@@ -47,8 +47,31 @@
                 <TextBox x:Name="RomsTextBox" PlaceholderText="Write the ROM name and separate with ; each entry" HorizontalAlignment="Stretch" Grid.Column="1" />
             </Grid>
             <ProgressBar x:Name="ProgressBarDownload" Height="5" MinHeight="5" Value="0" />
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="210" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Region:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <StackPanel Margin="0">
+                        <RadioButton x:Name="USARegionRadio" Content="USA" GroupName="Region" IsChecked="true" MinWidth="60"/>
+                    </StackPanel>
+                    <StackPanel Margin="0">
+                        <RadioButton x:Name="EURRegionRadio" Content="EUR" GroupName="Region" MinWidth="60"/>
+                    </StackPanel>
+                    <StackPanel Margin="0">
+                        <RadioButton x:Name="JPNRegionRadio" Content="JPN" GroupName="Region" MinWidth="60"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                    <TextBlock Text="System:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <ComboBox x:Name="SystemComboBox" Width="150" HorizontalAlignment="Right" PlaceholderText="Select System" ItemsSource="{x:Bind ComboItems}" IsDropDownOpen="False" />
+                </StackPanel>
+            </Grid>
             <Button x:Name="DownloadButton" Content="Download" Click="DownloadClick" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <ListView x:Name="DownloadRomList" Height="300" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Items}" BorderBrush="Gray" BorderThickness="1">
+            <ListView x:Name="DownloadRomList" Height="300" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Items}" BorderBrush="Gray" BorderThickness="1" SelectionMode="Single" RightTapped="ClickedRightTapped">
                 <ListView.HeaderTemplate>
                     <DataTemplate>
                         <Grid Padding="12" Background="{ThemeResource SystemBaseLowColor}">
@@ -84,19 +107,19 @@
                         </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="ContextFlyout">
+                            <Setter.Value>
+                                <MenuFlyout>
+                                      <MenuFlyoutItem Text="Start" Click="StartRomClick" Tag="{Binding}"/>
+                                      <MenuFlyoutItem Text="Open File Location" Click="OpenRomLocationClick" Tag="{Binding}"/>
+                                </MenuFlyout>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
             </ListView>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Region:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <StackPanel Margin="0">
-                    <RadioButton x:Name="USARegionRadio" Content="USA" GroupName="Region" IsChecked="true" MinWidth="60"/>
-                </StackPanel>
-                <StackPanel Margin="0">
-                    <RadioButton x:Name="EURRegionRadio" Content="EUR" GroupName="Region" MinWidth="60"/>
-                </StackPanel>
-                <StackPanel Margin="0">
-                    <RadioButton x:Name="JPNRegionRadio" Content="JPN" GroupName="Region" MinWidth="60"/>
-                </StackPanel>
-            </StackPanel>
         </StackPanel>
     </Grid>
 </Page>

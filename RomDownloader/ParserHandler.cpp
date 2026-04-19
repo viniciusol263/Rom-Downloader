@@ -15,7 +15,9 @@ namespace Handlers
 
 	std::vector<std::pair<std::string, std::string>> ParserHelper::GetLinks()
 	{
-		return m_links;
+		auto ret = m_links;
+		m_links.clear();
+		return ret;
 	}
 
 	std::vector<std::string> ParserHelper::GetRomList(std::string_view romsToDownload)

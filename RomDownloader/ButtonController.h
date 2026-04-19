@@ -15,7 +15,7 @@ namespace Controllers
 		ButtonController();
 
 		Foundation::IAsyncOperation<winrt::hstring> DownloadFolderAction(winrt::Microsoft::UI::Xaml::Window const& window);
-		Foundation::IAsyncOperationWithProgress<Foundation::Collections::IMap<StorageFile, winrt::hstring>, int> DownloadButtonAction(winrt::hstring roms, winrt::hstring region);
+		Foundation::IAsyncOperationWithProgress<Foundation::Collections::IMap<StorageFile, winrt::hstring>, int> DownloadButtonAction(winrt::hstring roms, winrt::hstring region, winrt::hstring system);
 	private:
 		Modules::NetworkModule m_networkModule;
 		Modules::StorageModule m_storageModule;
