@@ -80,6 +80,12 @@
     <Image Include="Assets\LockScreenLogo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="Assets\TitleIcon.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\AppIcon.ico">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Assets">
@@ -115,6 +121,7 @@
     <None Include="Assets\Game_Boy_Color_logo.svg">
       <Filter>Assets</Filter>
     </None>
+    <None Include="Assets\WonderSwan_logo.svg" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
