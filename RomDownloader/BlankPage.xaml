@@ -36,7 +36,12 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Download Path:" Grid.Column="0" VerticalAlignment="Center" />
                 <TextBox x:Name="DownloadTextBox" PlaceholderText="Choose where the files should be downloaded" Grid.Column="1" />
-                <Button x:Name="DownloadFolderButton" Content="Open Folder" Click="DownloadFolderButtonClick" Grid.Column="2" />
+                <Button x:Name="DownloadFolderButton" Click="DownloadFolderButtonClick" Grid.Column="2" >
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED25;"/>
+                        <TextBlock Text="Open Folder" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
             </Grid>
             <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
@@ -50,10 +55,15 @@
             <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="210" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="System:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <ComboBox x:Name="SystemComboBox" Width="150" HorizontalAlignment="Right" PlaceholderText="Select System" ItemsSource="{x:Bind ComboItems}" IsDropDownOpen="False" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1">
                     <TextBlock Text="Region:" VerticalAlignment="Center" Margin="0,0,10,0"/>
                     <StackPanel Margin="0">
                         <RadioButton x:Name="USARegionRadio" Content="USA" GroupName="Region" IsChecked="true" MinWidth="60"/>
@@ -65,12 +75,13 @@
                         <RadioButton x:Name="JPNRegionRadio" Content="JPN" GroupName="Region" MinWidth="60"/>
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Column="2">
-                    <TextBlock Text="System:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
-                    <ComboBox x:Name="SystemComboBox" Width="150" HorizontalAlignment="Right" PlaceholderText="Select System" ItemsSource="{x:Bind ComboItems}" IsDropDownOpen="False" />
-                </StackPanel>
+                <Button x:Name="DownloadButton" Click="DownloadClick" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="3">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE896;"/>
+                        <TextBlock Text="Download" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
             </Grid>
-            <Button x:Name="DownloadButton" Content="Download" Click="DownloadClick" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <ListView x:Name="DownloadRomList" Height="300" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Items}" BorderBrush="Gray" BorderThickness="1" SelectionMode="Single" RightTapped="ClickedRightTapped">
                 <ListView.HeaderTemplate>
                     <DataTemplate>

@@ -21,6 +21,8 @@ namespace winrt::RomDownloader::implementation
         InitializeComponent();
         
         auto appWindow = this->AppWindow();
+		appWindow.Title(L"Rom Downloader");
+		appWindow.SetIcon(L"Assets/AppIcon.ico");
         appWindow.Resize({ 800,600 });
         appWindow.Presenter().as<OverlappedPresenter>().IsResizable(false);
         appWindow.Presenter().as<OverlappedPresenter>().IsMaximizable(false);
