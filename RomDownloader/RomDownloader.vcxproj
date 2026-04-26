@@ -212,6 +212,9 @@
     the Windows App SDK Nuget package has not yet been restored.
   -->
   <ItemGroup>
+    <None Include="Assets\Game_Boy_Advance_logo.svg">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</None>
     <None Include="Assets\Game_Boy_Color_logo.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
