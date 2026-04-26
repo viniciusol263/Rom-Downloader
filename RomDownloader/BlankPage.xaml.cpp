@@ -53,8 +53,9 @@ namespace winrt::RomDownloader::implementation
     BlankPage::BlankPage()
     {
         InitializeComponent();
-		m_items = winrt::single_threaded_observable_vector<RomDownloader::RomItem>();
-		m_comboItems = winrt::single_threaded_observable_vector<winrt::hstring>();
+        m_items = winrt::single_threaded_observable_vector<RomDownloader::RomItem>();
+        m_comboItems = winrt::single_threaded_observable_vector<winrt::hstring>({L"All"});
+		SystemComboBox().SelectedIndex(0);
 		for (auto const& system : Constants::SystemsUrl) 
             m_comboItems.Append(winrt::to_hstring(system.first));
     }

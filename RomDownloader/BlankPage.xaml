@@ -51,7 +51,6 @@
                 <TextBlock Text="Roms to Download:" Grid.Column="0" VerticalAlignment="Center" />
                 <TextBox x:Name="RomsTextBox" PlaceholderText="Write the ROM name and separate with ; each entry" HorizontalAlignment="Stretch" Grid.Column="1" />
             </Grid>
-            <ProgressBar x:Name="ProgressBarDownload" Height="5" MinHeight="5" Value="0" />
             <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -82,6 +81,7 @@
                     </StackPanel>
                 </Button>
             </Grid>
+            <ProgressBar x:Name="ProgressBarDownload" Height="5" MinHeight="5" Value="0" />
             <ListView x:Name="DownloadRomList" Height="300" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Items}" BorderBrush="Gray" BorderThickness="1" SelectionMode="Single" RightTapped="ClickedRightTapped">
                 <ListView.HeaderTemplate>
                     <DataTemplate>

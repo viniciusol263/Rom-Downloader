@@ -122,6 +122,9 @@
       <Filter>Assets</Filter>
     </None>
     <None Include="Assets\WonderSwan_logo.svg" />
+    <None Include="Assets\Game_Boy_Advance_logo.svg">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />

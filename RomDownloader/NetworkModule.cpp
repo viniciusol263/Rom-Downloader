@@ -8,6 +8,7 @@
 #include <winrt/Windows.Storage.Streams.h>
 #include <gumbo.h>
 #include <nlohmann/json.hpp>
+#include <re2/re2.h>
 #include <string_view>
 #include <regex>
 #include <format>
@@ -45,7 +46,6 @@ namespace Modules
 	{
 		auto _romsToDownload = winrt::to_string(romsToDownload);
 		std::string_view romsToDownloadView{ _romsToDownload };
-
 		auto romList = m_parser.GetRomList(romsToDownloadView);
 		auto downloadLinks = RegexExtractLinks(romList, winrt::to_string(region), winrt::to_string(system));
 		auto map = winrt::single_threaded_map<winrt::hstring, winrt::hstring>();
@@ -93,6 +93,7 @@ namespace Modules
 			if (!response.IsSuccessStatusCode()) continue;
 
 			auto content = co_await StreamReadContent(response.Content());
+			auto test = winrt::to_string(content);
 			auto parsedContent = ParseDOMContent(content);
 			m_romsToDownload.emplace_back(url.first, parsedContent);
 		}
@@ -191,25 +192,33 @@ namespace Modules
 	std::vector<std::pair<std::string,std::string>> NetworkModule::RegexExtractLinks(std::vector<std::string> const& romList, std::string region, std::string system)
 	{
 		std::vector<std::pair<std::string, std::string>> extractedLinks;
+		std::vector<std::pair<std::string, std::shared_ptr<re2::RE2>>> regexesToSearch;
+
 		auto romsToBeSearched = romList;
 		std::sort(romsToBeSearched.begin(), romsToBeSearched.end());
 
 		auto regexPattern = [this, region](std::string const& safeName) {
 			return std::format("([A-Z]?)(\\/?)({}.*\\(((World.*)|({}.*))\\).*\\.(7z|zip))", safeName, region);
 		};
-		for (auto const& romListing : m_romsToDownload)
+		for (auto const& romName : romsToBeSearched)
+			regexesToSearch.emplace_back(romName, std::make_shared<re2::RE2>(regexPattern(romName)));
+		const auto bkpRegexesToSearch = regexesToSearch;
+
+		for(auto const& romListing : m_romsToDownload)
 		{
-			if (romListing.romPack != system) continue;
-			std::for_each(romListing.romList.begin(), romListing.romList.end(), [this, regexPattern, &romsToBeSearched, &extractedLinks, &romListing](auto const& romData)
+			if (system == "All")
 			{
-				for (auto rom = romsToBeSearched.begin(); rom != romsToBeSearched.end();)
+				regexesToSearch = bkpRegexesToSearch;
+			}
+			else if(romListing.romPack != system) continue;
+			std::for_each(romListing.romList.begin(), romListing.romList.end(), [this, regexPattern, &regexesToSearch, &extractedLinks, &romListing](auto const& romData)
+			{
+				for (auto rom = regexesToSearch.begin(); rom != regexesToSearch.end();)
 				{
-					std::regex romRegex(regexPattern(*rom));
-					std::smatch match;
-					if (std::regex_search(romData.first, match, romRegex))
+					if (RE2::PartialMatch(romData.first, *rom->second))
 					{
 						extractedLinks.push_back({ romListing.romPack ,romData.second });
-						rom = romsToBeSearched.erase(rom);	
+						rom = regexesToSearch.erase(rom);	
 					}
 					else ++rom;
 				}

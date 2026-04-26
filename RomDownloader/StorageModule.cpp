@@ -36,23 +36,30 @@ namespace Modules
 			return fileName.FileType() == L".zip" || fileName.FileType() == L".7z";
 		};
 
-		auto zippedFiles = co_await downloadPath.GetFilesAsync();
-
-		for (auto file : zippedFiles)
+		try
 		{
-			if (!isZip(file)) continue;
-			co_await winrt::resume_background();
-			if (file.FileType() == L".zip")
-				m_zipExtractor->extract(winrt::to_string(file.Path().c_str()), winrt::to_string(m_downloadPath.Path().c_str()));
-			else if (file.FileType() == L".7z")
-				m_7zExtractor->extract(winrt::to_string(file.Path().c_str()), winrt::to_string(m_downloadPath.Path().c_str()));
+			auto zippedFiles = co_await downloadPath.GetFilesAsync();
+
+			for (auto file : zippedFiles)
+			{
+				if (!isZip(file)) continue;
+				if (file.FileType() == L".zip")
+					m_zipExtractor->extract(winrt::to_string(file.Path().c_str()), winrt::to_string(m_downloadPath.Path().c_str()));
+				else if (file.FileType() == L".7z")
+					m_7zExtractor->extract(winrt::to_string(file.Path().c_str()), winrt::to_string(m_downloadPath.Path().c_str()));
+			}
+
+			co_await downloadPath.DeleteAsync();
+
+			extractedFiles = co_await m_downloadPath.GetFilesAsync();
+
+			co_return extractedFiles;
 		}
-
-		co_await downloadPath.DeleteAsync();
-
-		extractedFiles = co_await m_downloadPath.GetFilesAsync();
-
-		co_return extractedFiles;
+		catch (std::exception& ex)
+		{
+			auto what = ex.what();
+			auto what1 = what;
+		}
 	}
 
 }
