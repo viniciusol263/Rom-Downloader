@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "StorageModule.h"
+#include "Constants.h"
 
 namespace Modules
 {
@@ -36,30 +37,42 @@ namespace Modules
 			return fileName.FileType() == L".zip" || fileName.FileType() == L".7z";
 		};
 
-		try
+		auto zippedFiles = co_await downloadPath.GetFilesAsync();
+
+		for (auto file : zippedFiles)
 		{
-			auto zippedFiles = co_await downloadPath.GetFilesAsync();
-
-			for (auto file : zippedFiles)
-			{
-				if (!isZip(file)) continue;
-				if (file.FileType() == L".zip")
-					m_zipExtractor->extract(winrt::to_string(file.Path().c_str()), winrt::to_string(m_downloadPath.Path().c_str()));
-				else if (file.FileType() == L".7z")
-					m_7zExtractor->extract(winrt::to_string(file.Path().c_str()), winrt::to_string(m_downloadPath.Path().c_str()));
-			}
-
-			co_await downloadPath.DeleteAsync();
-
-			extractedFiles = co_await m_downloadPath.GetFilesAsync();
-
-			co_return extractedFiles;
+			if (!isZip(file)) continue;
+			if (file.FileType() == L".zip")
+				m_zipExtractor->extract(winrt::to_string(file.Path().c_str()), winrt::to_string(m_downloadPath.Path().c_str()));
+			else if (file.FileType() == L".7z")
+				m_7zExtractor->extract(winrt::to_string(file.Path().c_str()), winrt::to_string(m_downloadPath.Path().c_str()));
 		}
-		catch (std::exception& ex)
-		{
-			auto what = ex.what();
-			auto what1 = what;
-		}
+
+		co_await downloadPath.DeleteAsync();
+
+		extractedFiles = co_await m_downloadPath.GetFilesAsync();
+
+		co_return extractedFiles;
 	}
+
+	Foundation::IAsyncOperation<Foundation::Collections::IVector<StorageFile>> StorageModule::GetRomsFromDownloadPath()
+	{
+		if (m_downloadPath == nullptr) co_return Foundation::Collections::IVector<StorageFile>();
+
+		auto retVector = winrt::single_threaded_vector<StorageFile>();
+
+		Foundation::Collections::IVectorView<StorageFile> files = co_await m_downloadPath.GetFilesAsync();
+		
+		for (auto file : files)
+		{
+			if (Constants::FileTypeMap.find(winrt::to_string(file.FileType().c_str())) != Constants::FileTypeMap.end())
+			{
+				retVector.Append(file);
+			}
+		}
+
+		co_return retVector;
+	}
+
 
 }

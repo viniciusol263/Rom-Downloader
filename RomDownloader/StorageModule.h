@@ -27,6 +27,7 @@ namespace Modules
 
 		Foundation::IAsyncAction SetDownloadPath(winrt::hstring const& downloadPath);
 		Foundation::IAsyncOperation<Foundation::Collections::IVectorView<StorageFile>> ExtractFilesFromDownloadPath();
+		Foundation::IAsyncOperation<Foundation::Collections::IVector<StorageFile>> GetRomsFromDownloadPath();
 	private:
 		StorageFolder m_downloadPath{ nullptr };
 		std::shared_ptr<bit7z::Bit7zLibrary> m_zipLib;

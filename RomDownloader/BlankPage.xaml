@@ -82,7 +82,7 @@
                 </Button>
             </Grid>
             <ProgressBar x:Name="ProgressBarDownload" Height="5" MinHeight="5" Value="0" />
-            <ListView x:Name="DownloadRomList" Height="300" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Items}" BorderBrush="Gray" BorderThickness="1" SelectionMode="Single" RightTapped="ClickedRightTapped">
+            <ListView x:Name="DownloadRomList" Height="300" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Items}" BorderBrush="Gray" BorderThickness="1" SelectionMode="Single">
                 <ListView.HeaderTemplate>
                     <DataTemplate>
                         <Grid Padding="12" Background="{ThemeResource SystemBaseLowColor}">
@@ -107,6 +107,12 @@
                                     <ColumnDefinition Width="300"/>
                                     <ColumnDefinition Width="200"/>
                                 </Grid.ColumnDefinitions>
+                                <Grid.ContextFlyout>
+                                    <MenuFlyout>
+                                          <MenuFlyoutItem Text="Start" Click="StartRomClick" Tag="{Binding}"/>
+                                          <MenuFlyoutItem Text="Open File Location" Click="OpenRomLocationClick" Tag="{Binding}"/>
+                                    </MenuFlyout>
+                                </Grid.ContextFlyout>
                                 <Image Width="100" VerticalAlignment="Center" HorizontalAlignment="Left">
                                     <Image.Source>
                                         <SvgImageSource UriSource="{x:Bind ImageSrc}"/>
@@ -118,18 +124,6 @@
                         </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="ContextFlyout">
-                            <Setter.Value>
-                                <MenuFlyout>
-                                      <MenuFlyoutItem Text="Start" Click="StartRomClick" Tag="{Binding}"/>
-                                      <MenuFlyoutItem Text="Open File Location" Click="OpenRomLocationClick" Tag="{Binding}"/>
-                                </MenuFlyout>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListView.ItemContainerStyle>
             </ListView>
         </StackPanel>
     </Grid>

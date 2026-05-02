@@ -3,20 +3,29 @@
 #include "ButtonController.h"
 #include <chrono>
 #include "UIHandler.h"
+#include "Constants.h"
 
 namespace Controllers
 {
 	ButtonController::ButtonController()
 	{}
 
-	Foundation::IAsyncOperation<winrt::hstring> ButtonController::DownloadFolderAction(winrt::Microsoft::UI::Xaml::Window const& window)
+	Foundation::IAsyncOperation<Foundation::Collections::IMap<winrt::hstring, Foundation::Collections::IMap<StorageFile, winrt::hstring>>>
+		ButtonController::DownloadFolderAction(winrt::Microsoft::UI::Xaml::Window const& window)
 	{
+		auto retMap = winrt::single_threaded_map<winrt::hstring, Foundation::Collections::IMap<StorageFile, winrt::hstring>>();
 		auto folder = co_await Handlers::UIHandler::ScheduleFolderPicker(window);
+		if (folder == nullptr) co_return retMap;
 		co_await m_storageModule.SetDownloadPath(folder.Path());
-		co_return folder.Path();
+		auto files = co_await m_storageModule.GetRomsFromDownloadPath();
+		auto romList = co_await CreateRomList(files);
+		retMap.Insert(folder.Path(), romList);
+
+		co_return retMap;
 	}
 
-	Foundation::IAsyncOperationWithProgress<Foundation::Collections::IMap<StorageFile,winrt::hstring>,int> ButtonController::DownloadButtonAction(winrt::hstring roms, winrt::hstring region, winrt::hstring system)
+	Foundation::IAsyncOperationWithProgress<Foundation::Collections::IMap<StorageFile,winrt::hstring>,int> 
+		ButtonController::DownloadButtonAction(winrt::hstring roms, winrt::hstring region, winrt::hstring system)
 	{
 		if (roms == L"" || system == L"" || m_storageModule.GetDownloadPath() == nullptr) co_return winrt::single_threaded_map<StorageFile, winrt::hstring>();
 		auto returnMap = winrt::single_threaded_map<StorageFile, winrt::hstring>();
@@ -47,5 +56,17 @@ namespace Controllers
 		}
 
 		co_return returnMap;
+	}
+
+	Foundation::IAsyncOperation<Foundation::Collections::IMap<StorageFile, winrt::hstring>>
+		ButtonController::CreateRomList(Foundation::Collections::IVector<StorageFile> const& roms)
+	{
+		auto romList = winrt::single_threaded_map<StorageFile, winrt::hstring>();
+		for (auto const& rom : roms)
+		{
+			romList.Insert(rom, winrt::to_hstring(Constants::FileTypeMap.at(winrt::to_string(rom.FileType()))));
+		}
+
+		co_return romList;
 	}
 }
