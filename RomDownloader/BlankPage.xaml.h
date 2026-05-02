@@ -18,6 +18,8 @@ namespace winrt::RomDownloader::implementation
         fire_and_forget DownloadClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args);
         fire_and_forget StartRomClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args);
         fire_and_forget OpenRomLocationClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args);
+        fire_and_forget OnItemDoubleTapped(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Input::DoubleTappedRoutedEventArgs const& args);
+        fire_and_forget OnListKeyDown(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Input::KeyRoutedEventArgs const& args);
         winrt::Windows::Foundation::Collections::IObservableVector<RomDownloader::RomItem> Items();
         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> ComboItems();
         winrt::hstring GetRegion();
