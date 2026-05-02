@@ -82,18 +82,22 @@
                 </Button>
             </Grid>
             <ProgressBar x:Name="ProgressBarDownload" Height="5" MinHeight="5" Value="0" />
-            <ListView x:Name="DownloadRomList" Height="300" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Items}" BorderBrush="Gray" BorderThickness="1" SelectionMode="Single">
+            <ListView x:Name="DownloadRomList" Height="300" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Items}" BorderBrush="Gray" BorderThickness="1" SelectionMode="Single" DoubleTapped="OnItemDoubleTapped" PreviewKeyDown="OnListKeyDown">
                 <ListView.HeaderTemplate>
                     <DataTemplate>
                         <Grid Padding="12" Background="{ThemeResource SystemBaseLowColor}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="300"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="300"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="200"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="ROM System" Style="{ThemeResource CaptionTextBlockStyle}"/>
-                            <TextBlock Text="ROM Name" Grid.Column="1" Style="{ThemeResource CaptionTextBlockStyle}"/>
-                            <TextBlock Text="ROM Size" Grid.Column="2" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                            <Rectangle Grid.Column="1" Fill="Transparent"/> 
+                            <TextBlock Text="ROM Name" Grid.Column="2" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                            <Rectangle Grid.Column="3" Fill="Transparent"/>
+                            <TextBlock Text="ROM Size" Grid.Column="4" Style="{ThemeResource CaptionTextBlockStyle}"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.HeaderTemplate>

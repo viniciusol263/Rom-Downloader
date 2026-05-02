@@ -86,6 +86,29 @@ namespace winrt::RomDownloader::implementation
 		co_await Launcher::LaunchFolderAsync(co_await file.GetParentAsync());
         co_return;
     }
+    
+    fire_and_forget BlankPage::OnItemDoubleTapped(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Input::DoubleTappedRoutedEventArgs const& args)
+    {
+        auto romItem = DownloadRomList().SelectedItem().as<RomDownloader::RomItem>();
+        auto file = romItem.File();
+        co_await Launcher::LaunchFileAsync(file);
+        co_return;
+    }
+
+    fire_and_forget BlankPage::OnListKeyDown(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Input::KeyRoutedEventArgs const& args)
+    {
+        if (args.Key() == winrt::Windows::System::VirtualKey::Enter ||
+            args.Key() == winrt::Windows::System::VirtualKey::Space)
+        {
+            auto romItem = DownloadRomList().SelectedItem().as<RomDownloader::RomItem>();
+            if (romItem)
+            {
+                auto file = romItem.File();
+                co_await Launcher::LaunchFileAsync(file);
+            }
+        }
+        co_return;
+    }
 #pragma endregion
 
 #pragma region IDLProperties
