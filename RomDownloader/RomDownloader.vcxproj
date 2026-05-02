@@ -131,6 +131,9 @@
     <ClInclude Include="ParserHandler.h" />
     <ClInclude Include="NetworkModule.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="RomItem.h" >
+      <DependentUpon>RomItem.idl</DependentUpon>
+    </ClInclude>
     <ClInclude Include="StorageModule.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
@@ -157,6 +160,9 @@
     <ClCompile Include="ButtonController.cpp" />
     <ClCompile Include="ParserHandler.cpp" />
     <ClCompile Include="NetworkModule.cpp" />
+    <ClCompile Include="RomItem.cpp" >
+      <DependentUpon>RomItem.idl</DependentUpon>
+    </ClCompile>
     <ClCompile Include="StorageModule.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -180,7 +186,7 @@
       <SubType>Code</SubType>
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Midl>
-    <Midl Include="RomItem.idl" />
+    <Midl Include="RomItem.idl"/>
   </ItemGroup>
   <ItemGroup>
     <Text Include="readme.txt">
@@ -213,8 +219,8 @@
   -->
   <ItemGroup>
     <None Include="Assets\Game_Boy_Advance_logo.svg">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</None>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Assets\Game_Boy_Color_logo.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

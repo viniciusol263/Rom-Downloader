@@ -22,4 +22,12 @@ namespace Constants
 		{"WonderSwan", "ms-appx:///Assets/WonderSwan_logo.svg"},
 		{"WonderSwan Color", "ms-appx:///Assets/WonderSwan_logo.svg"}
 	};
+
+	const std::map<std::string, std::string> FileTypeMap = {
+		{".gb", "Game Boy" },
+		{".gbc", "Game Boy Color"},
+		{".gba", "Game Boy Advance"},
+		{".ws", "WonderSwan"},
+		{".wsc", "WonderSwan Color"}
+	};
 }

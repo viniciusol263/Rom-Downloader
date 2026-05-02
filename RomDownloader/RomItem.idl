@@ -3,10 +3,11 @@ namespace RomDownloader
 	runtimeclass RomItem
 	{
 		RomItem();
-		RomItem(String Name, String Size, String ImageSrc);
+		RomItem(String Name, String Size, String ImageSrc, Windows.Storage.StorageFile File);
 
 		String Name;
 		String Size;
 		String ImageSrc;
+		Windows.Storage.StorageFile File;
 	}
 }
