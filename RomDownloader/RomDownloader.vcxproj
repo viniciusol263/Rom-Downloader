@@ -127,11 +127,13 @@
       <SubType>Code</SubType>
     </ClInclude>
     <ClInclude Include="ButtonController.h" />
+    <ClInclude Include="CloudModule.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="FrontController.h" />
     <ClInclude Include="ParserHandler.h" />
     <ClInclude Include="NetworkModule.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="RomItem.h" >
+    <ClInclude Include="RomItem.h">
       <DependentUpon>RomItem.idl</DependentUpon>
     </ClInclude>
     <ClInclude Include="StorageModule.h" />
@@ -158,9 +160,11 @@
       <SubType>Code</SubType>
     </ClCompile>
     <ClCompile Include="ButtonController.cpp" />
+    <ClCompile Include="CloudModule.cpp" />
+    <ClCompile Include="FrontController.cpp" />
     <ClCompile Include="ParserHandler.cpp" />
     <ClCompile Include="NetworkModule.cpp" />
-    <ClCompile Include="RomItem.cpp" >
+    <ClCompile Include="RomItem.cpp">
       <DependentUpon>RomItem.idl</DependentUpon>
     </ClCompile>
     <ClCompile Include="StorageModule.cpp" />
@@ -186,7 +190,7 @@
       <SubType>Code</SubType>
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Midl>
-    <Midl Include="RomItem.idl"/>
+    <Midl Include="RomItem.idl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="readme.txt">
@@ -218,18 +222,6 @@
     the Windows App SDK Nuget package has not yet been restored.
   -->
   <ItemGroup>
-    <None Include="Assets\Game_Boy_Advance_logo.svg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Assets\Game_Boy_Color_logo.svg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Assets\Nintendo_Game_Boy_Logo.svg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Assets\WonderSwan_logo.svg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

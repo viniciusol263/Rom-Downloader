@@ -17,6 +17,8 @@ using namespace winrt::Windows::Storage;
 namespace Modules
 {
 	constexpr std::string_view tmpDirectory = "tmp";
+	const winrt::hstring baseDirectory = winrt::Windows::ApplicationModel::Package::Current().InstalledLocation().Path();
+
 	class StorageModule
 	{
 	public:
@@ -26,6 +28,7 @@ namespace Modules
 		Foundation::IAsyncOperation<StorageFolder> GetTemporaryPath();
 
 		Foundation::IAsyncAction SetDownloadPath(winrt::hstring const& downloadPath);
+		Foundation::IAsyncOperation<winrt::hstring> CreateFolder(winrt::hstring const& folderName);
 		Foundation::IAsyncOperation<Foundation::Collections::IVectorView<StorageFile>> ExtractFilesFromDownloadPath();
 		Foundation::IAsyncOperation<Foundation::Collections::IVector<StorageFile>> GetRomsFromDownloadPath();
 	private:

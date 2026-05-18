@@ -23,7 +23,13 @@ namespace Handlers
 	std::vector<std::string> ParserHelper::GetRomList(std::string_view romsToDownload)
 	{
 		auto index = 0;
-		auto end = romsToDownload.find(";");
+		auto delimiter = ";";
+		
+		if (romsToDownload.find(delimiter) == std::string_view::npos)
+		{
+			delimiter = ",";
+		}
+		auto end = romsToDownload.find(delimiter);
 		std::vector<std::string> romList;
 		if (end != std::string_view::npos)
 		{
@@ -32,7 +38,7 @@ namespace Handlers
 				// Process each rom
 				romList.push_back(std::string(romsToDownload.substr(index, end - index)));
 				index = end + 1;
-				end = romsToDownload.find(";", index);
+				end = romsToDownload.find(delimiter, index);
 			}
 		}
 		romList.push_back(std::string(romsToDownload.substr(index, end - index)));

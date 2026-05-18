@@ -2,6 +2,7 @@
 
 #include "NetworkModule.h"
 #include "StorageModule.h"
+#include "CloudModule.h"
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Microsoft.UI.Xaml.Controls.h>
 
@@ -21,6 +22,7 @@ namespace Controllers
 	private:
 		Modules::NetworkModule m_networkModule;
 		Modules::StorageModule m_storageModule;
+		Modules::CloudModule m_cloudModule;
 
 		Foundation::IAsyncOperation<Foundation::Collections::IMap<StorageFile, winrt::hstring>>
 			CreateRomList(Foundation::Collections::IVector<StorageFile> const& roms);
