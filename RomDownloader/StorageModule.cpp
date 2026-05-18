@@ -6,7 +6,7 @@ namespace Modules
 {
 	StorageModule::StorageModule()
 	{
-		auto exePath = winrt::Windows::ApplicationModel::Package::Current().InstalledLocation().Path() + winrt::to_hstring("\\..\\7z.dll");
+		auto exePath = baseDirectory + winrt::to_hstring("\\..\\7z.dll");
 		m_zipLib = std::make_shared<bit7z::Bit7zLibrary>(winrt::to_string(exePath));
 		m_zipExtractor = std::make_shared<bit7z::BitExtractor<std::string>>(*m_zipLib, bit7z::BitFormat::Zip);
 		m_7zExtractor = std::make_shared<bit7z::BitExtractor<std::string>>(*m_zipLib, bit7z::BitFormat::SevenZip);
@@ -21,6 +21,13 @@ namespace Modules
 	{
 		co_await m_downloadPath.CreateFolderAsync(winrt::to_hstring(tmpDirectory), CreationCollisionOption::OpenIfExists);
 		co_return co_await m_downloadPath.GetFolderAsync(winrt::to_hstring(tmpDirectory));
+	}
+
+	Foundation::IAsyncOperation<winrt::hstring> StorageModule::CreateFolder(winrt::hstring const& folderName)
+	{
+		auto folder = co_await StorageFolder::GetFolderFromPathAsync(baseDirectory);
+		auto path = co_await folder.CreateFolderAsync(folderName, CreationCollisionOption::OpenIfExists);
+		co_return path.Path();
 	}
 
 	Foundation::IAsyncAction StorageModule::SetDownloadPath(winrt::hstring const& downloadPath)

@@ -3,6 +3,7 @@
 #include "BlankPage.g.h"
 #include "RomItem.h"
 #include "ButtonController.h"
+#include "FrontController.h"
 #include <winrt/Microsoft.UI.Xaml.Input.h>
 
 namespace winrt::RomDownloader::implementation
@@ -12,6 +13,7 @@ namespace winrt::RomDownloader::implementation
         BlankPage();
 
         Controllers::ButtonController m_buttonController;
+		Controllers::FrontController m_frontController;
 
         void SetPrimaryWindow(winrt::Microsoft::UI::Xaml::Window const& window);
         fire_and_forget DownloadFolderButtonClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args);

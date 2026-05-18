@@ -33,6 +33,12 @@
       <Filter>Handlers</Filter>
     </ClCompile>
     <ClCompile Include="RomItem.cpp" />
+    <ClCompile Include="CloudModule.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="FrontController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -59,6 +65,12 @@
       <Filter>Constants</Filter>
     </ClInclude>
     <ClInclude Include="RomItem.h" />
+    <ClInclude Include="CloudModule.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="FrontController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
@@ -117,16 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Assets\Nintendo_Game_Boy_Logo.svg">
-      <Filter>Assets</Filter>
-    </None>
-    <None Include="Assets\Game_Boy_Color_logo.svg">
-      <Filter>Assets</Filter>
-    </None>
     <None Include="Assets\WonderSwan_logo.svg" />
-    <None Include="Assets\Game_Boy_Advance_logo.svg">
-      <Filter>Assets</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
