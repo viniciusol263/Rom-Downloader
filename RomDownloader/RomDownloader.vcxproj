@@ -160,7 +160,9 @@
       <SubType>Code</SubType>
     </ClCompile>
     <ClCompile Include="ButtonController.cpp" />
-    <ClCompile Include="CloudModule.cpp" />
+    <ClCompile Include="CloudModule.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="FrontController.cpp" />
     <ClCompile Include="ParserHandler.cpp" />
     <ClCompile Include="NetworkModule.cpp" />
@@ -223,6 +225,7 @@
   -->
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RomDownloader.rc" />
@@ -247,7 +250,6 @@
     <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets')" />
     <Import Project="..\packages\Microsoft.Windows.SDK.BuildTools.10.0.28000.1721\build\Microsoft.Windows.SDK.BuildTools.targets" Condition="Exists('..\packages\Microsoft.Windows.SDK.BuildTools.10.0.28000.1721\build\Microsoft.Windows.SDK.BuildTools.targets')" />
     <Import Project="..\packages\Microsoft.Windows.ImplementationLibrary.1.0.260126.7\build\native\Microsoft.Windows.ImplementationLibrary.targets" Condition="Exists('..\packages\Microsoft.Windows.ImplementationLibrary.1.0.260126.7\build\native\Microsoft.Windows.ImplementationLibrary.targets')" />
-    <Import Project="..\packages\gumbo-parser-vc140.0.10.1.3\build\native\gumbo-parser-vc140.targets" Condition="Exists('..\packages\gumbo-parser-vc140.0.10.1.3\build\native\gumbo-parser-vc140.targets')" />
     <Import Project="..\packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets" Condition="Exists('..\packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets')" />
     <Import Project="..\packages\Selenium.WebDriver.MSEdgeDriver.145.0.3800.82\build\Selenium.WebDriver.MSEdgeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.MSEdgeDriver.145.0.3800.82\build\Selenium.WebDriver.MSEdgeDriver.targets')" />
     <Import Project="..\packages\7z.Libs.26.00.0\build\native\7z.Libs.targets" Condition="Exists('..\packages\7z.Libs.26.00.0\build\native\7z.Libs.targets')" />
@@ -284,7 +286,6 @@
     <Error Condition="!Exists('..\packages\Microsoft.Windows.SDK.BuildTools.10.0.28000.1721\build\Microsoft.Windows.SDK.BuildTools.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.SDK.BuildTools.10.0.28000.1721\build\Microsoft.Windows.SDK.BuildTools.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Windows.SDK.BuildTools.10.0.28000.1721\build\Microsoft.Windows.SDK.BuildTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.SDK.BuildTools.10.0.28000.1721\build\Microsoft.Windows.SDK.BuildTools.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Windows.ImplementationLibrary.1.0.260126.7\build\native\Microsoft.Windows.ImplementationLibrary.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.ImplementationLibrary.1.0.260126.7\build\native\Microsoft.Windows.ImplementationLibrary.targets'))" />
-    <Error Condition="!Exists('..\packages\gumbo-parser-vc140.0.10.1.3\build\native\gumbo-parser-vc140.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\gumbo-parser-vc140.0.10.1.3\build\native\gumbo-parser-vc140.targets'))" />
     <Error Condition="!Exists('..\packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets'))" />
     <Error Condition="!Exists('..\packages\Selenium.WebDriver.MSEdgeDriver.145.0.3800.82\build\Selenium.WebDriver.MSEdgeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.MSEdgeDriver.145.0.3800.82\build\Selenium.WebDriver.MSEdgeDriver.targets'))" />
     <Error Condition="!Exists('..\packages\7z.Libs.26.00.0\build\native\7z.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\7z.Libs.26.00.0\build\native\7z.Libs.targets'))" />

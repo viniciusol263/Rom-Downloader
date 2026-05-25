@@ -8,10 +8,10 @@
 
 namespace Handlers
 {
-	class ParserHelper
+	class ParserHandler
 	{
 	public:
-		ParserHelper();
+		ParserHandler();
 
 		void ParseDOMContent(std::string const& content);
 		std::vector<std::pair<std::string, std::string>> GetLinks();

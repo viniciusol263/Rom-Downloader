@@ -7,13 +7,11 @@
 #include <winrt/Windows.Storage.h>
 #include <winrt/Windows.Storage.Streams.h>
 #include <gumbo.h>
-#include <nlohmann/json.hpp>
 #include <re2/re2.h>
 #include <string_view>
 #include <regex>
 #include <format>
 #include <algorithm>
-
 
 using json = nlohmann::json;
 using namespace winrt::Windows::Storage;
@@ -42,40 +40,42 @@ namespace Modules
 	}
 
 	Foundation::IAsyncOperationWithProgress<Foundation::Collections::IMap<winrt::hstring, winrt::hstring>,int> 
-		NetworkModule::DownloadRoms(winrt::hstring romsToDownload, winrt::hstring region, winrt::hstring system, StorageFolder downloadPath, std::function<void(int)> progressCallback)
+		NetworkModule::DownloadRoms(json romsToDownload, StorageFolder downloadPath, std::function<void(int)> progressCallback)
 	{
-		auto _romsToDownload = winrt::to_string(romsToDownload);
-		std::string_view romsToDownloadView{ _romsToDownload };
-		auto romList = m_parser.GetRomList(romsToDownloadView);
-		auto downloadLinks = RegexExtractLinks(romList, winrt::to_string(region), winrt::to_string(system));
 		auto map = winrt::single_threaded_map<winrt::hstring, winrt::hstring>();
 
-		for (auto const& link : downloadLinks)
+		for (auto const& rom : romsToDownload)
 		{
-			auto unescapedUri = winrt::to_string(Foundation::Uri::UnescapeComponent(winrt::to_hstring(link.second)));
-			auto key = Foundation::Uri::UnescapeComponent(
-				winrt::to_hstring(link.second)
-			);
-			auto value = winrt::to_hstring(link.first);
-			map.Insert(key, value);
-			auto response = co_await m_client.GetAsync(Foundation::Uri(winrt::to_hstring(link.second)), HttpCompletionOption::ResponseHeadersRead);
-			StorageFile file = co_await downloadPath.CreateFileAsync(winrt::to_hstring(unescapedUri.substr(unescapedUri.find_last_of("/") + 1)), CreationCollisionOption::ReplaceExisting);
-			
-			response.EnsureSuccessStatusCode();
-			auto length = response.Content().Headers().ContentLength();
-			if (length)
+			for (auto const& romArray : rom)
 			{
-				uint64_t size = length.Value();
-			}
-			else {
-				progressCallback(200);
-			}
+				auto romLink = romArray["link"].get<std::string>();
+				auto romSystem = romArray["system"].get<std::string>();
 
-			IInputStream inputStream = co_await response.Content().ReadAsInputStreamAsync();
-			IRandomAccessStream fileStream = co_await file.OpenAsync(FileAccessMode::ReadWrite);
+				auto unescapedUri = winrt::to_string(Foundation::Uri::UnescapeComponent(winrt::to_hstring(romLink)));
+				auto key = Foundation::Uri::UnescapeComponent(
+					winrt::to_hstring(romLink)
+				);
+				auto value = winrt::to_hstring(romSystem);
+				map.Insert(key, value);
+				auto response = co_await m_client.GetAsync(Foundation::Uri(winrt::to_hstring(romLink)), HttpCompletionOption::ResponseHeadersRead);
+				StorageFile file = co_await downloadPath.CreateFileAsync(winrt::to_hstring(unescapedUri.substr(unescapedUri.find_last_of("/") + 1)), CreationCollisionOption::ReplaceExisting);
+			
+				response.EnsureSuccessStatusCode();
+				auto length = response.Content().Headers().ContentLength();
+				if (length)
+				{
+					uint64_t size = length.Value();
+				}
+				else {
+					progressCallback(200);
+				}
 
-			co_await RandomAccessStream::CopyAsync(inputStream, fileStream);
-			co_await fileStream.FlushAsync();
+				IInputStream inputStream = co_await response.Content().ReadAsInputStreamAsync();
+				IRandomAccessStream fileStream = co_await file.OpenAsync(FileAccessMode::ReadWrite);
+
+				co_await RandomAccessStream::CopyAsync(inputStream, fileStream);
+				co_await fileStream.FlushAsync();
+			}
 		}
 
 		progressCallback(0);
@@ -98,65 +98,6 @@ namespace Modules
 			m_romsToDownload.emplace_back(url.first, parsedContent);
 		}
 	}
-
-	Foundation::IAsyncOperationWithProgress<winrt::hstring, int> NetworkModule::GetWebViewRequests(WebView2 const& webView)
-	{
-		winrt::hstring result;
-		for (auto& url : m_urls)
-		{
-			winrt::apartment_context ui;
-			co_await webView.EnsureCoreWebView2Async();
-
-			winrt::handle eventHandle{ CreateEvent(nullptr, true, false, nullptr) };
-
-			winrt::event_token token;
-			token = webView.NavigationCompleted([&](auto const&, auto const& args)
-			{
-				webView.NavigationCompleted(token);
-				SetEvent(eventHandle.get());
-			});
-
-			webView.Source(Foundation::Uri(winrt::to_hstring(url.second)));
-
-
-			co_await winrt::resume_on_signal(eventHandle.get());
-
-			ResetEvent(eventHandle.get());
-
-			co_await ui;
-			token = webView.NavigationCompleted([&](auto const&, auto const& args)
-				{
-					webView.NavigationCompleted(token);
-				
-					SetEvent(eventHandle.get());
-				});
-
-			webView.Reload();
-
-			co_await winrt::resume_on_signal(eventHandle.get());
-
-			co_await ui;
-			co_await webView.ExecuteScriptAsync(
-				LR"(new Promise(resolve => {
-					if (document.readyState === 'complete') resolve();
-					else window.addEventListener('load', () => resolve());
-					}))"
-			);
-
-
-			co_await ui;
-			auto response = co_await webView.ExecuteScriptAsync(LR"(document.documentElement.outerHTML)");
-			
-			std::string raw = winrt::to_string(response);
-
-			std::string html = json::parse(raw).get<std::string>();
-
-			result = winrt::to_hstring(html);
-
-		}
-		co_return result;
-	}
-
 
 	std::vector<std::pair<std::string, std::string>> NetworkModule::ParseDOMContent(winrt::hstring const& content)
 	{

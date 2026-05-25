@@ -3,24 +3,24 @@
 
 namespace Handlers
 {
-	ParserHelper::ParserHelper()
+	ParserHandler::ParserHandler()
 	{}
 
-	void ParserHelper::ParseDOMContent(std::string const& content)
+	void ParserHandler::ParseDOMContent(std::string const& content)
 	{
 		m_pageOutput = std::shared_ptr<GumboOutput>(gumbo_parse(content.c_str()));
 		GatherLinks(m_pageOutput->root);
 		auto elem = m_links; //DEBUG ONLY
 	}
 
-	std::vector<std::pair<std::string, std::string>> ParserHelper::GetLinks()
+	std::vector<std::pair<std::string, std::string>> ParserHandler::GetLinks()
 	{
 		auto ret = m_links;
 		m_links.clear();
 		return ret;
 	}
 
-	std::vector<std::string> ParserHelper::GetRomList(std::string_view romsToDownload)
+	std::vector<std::string> ParserHandler::GetRomList(std::string_view romsToDownload)
 	{
 		auto index = 0;
 		auto delimiter = ";";
@@ -45,7 +45,7 @@ namespace Handlers
 		return romList;
 	}
 
-	void ParserHelper::GatherLinks(GumboNode* node)
+	void ParserHandler::GatherLinks(GumboNode* node)
 	{
 		if (!node || node->type != GUMBO_NODE_ELEMENT ) return;
 		if (node->v.element.tag == GUMBO_TAG_A)

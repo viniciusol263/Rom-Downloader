@@ -1,12 +1,15 @@
-#include "pch.h"
 #include <format>
 #include <fstream>
+#include <sstream>
 
 #include "CloudModule.h"
 #include "Constants.h"
 
 #include <aws/s3/model/ListObjectsV2Request.h>
 #include <aws/s3/model/GetObjectRequest.h>
+
+#include <aws/lambda/LambdaClient.h>
+#include <aws/lambda/model/InvokeRequest.h>
 
 
 namespace Modules
@@ -20,7 +23,8 @@ namespace Modules
 		m_config = std::make_shared<Aws::Client::ClientConfiguration>();
 		m_config->region = region;
 
-		m_client = std::make_shared<Aws::S3::S3Client>(*m_credentials, nullptr, *m_config);
+		m_s3Client = std::make_shared<Aws::S3::S3Client>(*m_credentials, nullptr, *m_config);
+		m_lambdaClient = std::make_shared<Aws::Lambda::LambdaClient>(*m_credentials, nullptr, *m_config);
 	}
 
 	CloudModule::~CloudModule()
@@ -36,7 +40,7 @@ namespace Modules
 		request.SetBucket(s3BucketName);
 		request.SetPrefix(path);
 
-		auto outcome = m_client->ListObjectsV2(request);
+		auto outcome = m_s3Client->ListObjectsV2(request);
 
 		if (outcome.IsSuccess())
 		{
@@ -62,7 +66,7 @@ namespace Modules
 
 		auto objectName = object.substr(object.find_last_of("/") + 1);
 
-		auto outcome = m_client->GetObject(request);
+		auto outcome = m_s3Client->GetObject(request);
 
 		if (outcome.IsSuccess())
 		{
@@ -72,6 +76,32 @@ namespace Modules
 		}
 		
 	}
+
+	Foundation::IAsyncOperation<winrt::hstring> CloudModule::InvokeLambda(Aws::String payload, std::string const& lambdaName)
+	{
+		co_await winrt::resume_background();
+		Aws::Lambda::Model::InvokeRequest request;
+
+		request.SetFunctionName(lambdaName);
+		
+		auto stream = Aws::MakeShared<Aws::StringStream>("");
+		(*stream) << payload;
+
+		request.SetBody(stream);
+
+		auto outcome = m_lambdaClient->Invoke(request);
+		if(outcome.IsSuccess())
+		{
+			auto& result = outcome.GetResult();
+
+			std::stringstream ss;
+			ss << result.GetPayload().rdbuf();
+
+			co_return winrt::to_hstring(ss.str());
+		}
+		co_return L"";
+	}
+
 
 
 }
