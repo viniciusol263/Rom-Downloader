@@ -5,6 +5,7 @@
 #include "CloudModule.h"
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Microsoft.UI.Xaml.Controls.h>
+#include "ParserHandler.h"
 
 using namespace winrt::Windows;
 
@@ -23,6 +24,7 @@ namespace Controllers
 		Modules::NetworkModule m_networkModule;
 		Modules::StorageModule m_storageModule;
 		Modules::CloudModule m_cloudModule;
+		Handlers::ParserHandler m_parser;
 
 		Foundation::IAsyncOperation<Foundation::Collections::IMap<StorageFile, winrt::hstring>>
 			CreateRomList(Foundation::Collections::IVector<StorageFile> const& roms);

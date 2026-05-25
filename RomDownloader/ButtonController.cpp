@@ -1,9 +1,13 @@
 #include "pch.h"
 #include <print>
+#include <format>
 #include "ButtonController.h"
 #include <chrono>
 #include "UIHandler.h"
 #include "Constants.h"
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 namespace Controllers
 {
@@ -32,7 +36,19 @@ namespace Controllers
 
 		auto progress = co_await winrt::get_progress_token();
 
-		auto romSystems = co_await m_networkModule.DownloadRoms(roms, region, system, co_await m_storageModule.GetTemporaryPath(), [progress](int value) {
+		auto romsList = m_parser.GetRomList(winrt::to_string(roms));
+		json romJson = {
+			{"roms", m_parser.GetRomList(winrt::to_string(roms))},
+			{"region", winrt::to_string(region)},
+			{"system" , winrt::to_string(system)}
+		};
+		auto romLinks = co_await m_cloudModule.InvokeLambda(romJson.dump());
+
+		json romLinksJson = json::parse(winrt::to_string(romLinks));
+		auto romsJsonBody = json::parse(romLinksJson["body"].get<std::string>());
+		auto romsJson = romsJsonBody["matches"];
+
+		auto romSystems = co_await m_networkModule.DownloadRoms(romsJson, co_await m_storageModule.GetTemporaryPath(), [progress](int value) {
 			progress(value);
 			});
 

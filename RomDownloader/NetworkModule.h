@@ -11,7 +11,9 @@
 
 #include "ParserHandler.h"
 #include "StorageModule.h"
+#include <nlohmann/json.hpp>
 
+using json = nlohmann::json;
 using namespace winrt::Windows;
 using namespace winrt::Windows::Web::Http;
 using namespace winrt::Microsoft::UI::Xaml::Controls;
@@ -41,16 +43,15 @@ namespace Modules
 		NetworkModule();
 
 		Foundation::IAsyncOperationWithProgress<Foundation::Collections::IMap<winrt::hstring, winrt::hstring>, int>  
-			DownloadRoms(winrt::hstring romsToDownload, winrt::hstring region, winrt::hstring system, StorageFolder downloadPath, std::function<void(int)> progressCallback);
+			DownloadRoms(json romsToDownload, StorageFolder downloadPath, std::function<void(int)> progressCallback);
 	private:
 		HttpClient m_client;
-		Handlers::ParserHelper m_parser;
+		Handlers::ParserHandler m_parser;
 
 		std::vector<std::pair<std::string, std::string>> m_urls;
 		std::vector<RomListing> m_romsToDownload;
 
 		Foundation::IAsyncAction GetUrlContentListing();
-		Foundation::IAsyncOperationWithProgress<winrt::hstring, int> GetWebViewRequests(WebView2 const& webView);
 		std::vector<std::pair<std::string, std::string>> ParseDOMContent(winrt::hstring const& content);
 		Foundation::IAsyncOperation<winrt::hstring> StreamReadContent(IHttpContent const& content);
 		std::vector<std::pair<std::string, std::string>>  RegexExtractLinks(std::vector<std::string> const& romList, std::string region, std::string system);
