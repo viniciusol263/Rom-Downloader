@@ -5,8 +5,9 @@ namespace RomDownloader
     [default_interface]
     runtimeclass BlankPage : Microsoft.UI.Xaml.Controls.Page
     {
-        BlankPage();
+        BlankPage(Microsoft.UI.Xaml.Window window);
         void SetPrimaryWindow(Microsoft.UI.Xaml.Window window);
+
         Windows.Foundation.Collections.IObservableVector<RomItem> Items{ get; };
         Windows.Foundation.Collections.IObservableVector<String> ComboItems{ get; };
     }

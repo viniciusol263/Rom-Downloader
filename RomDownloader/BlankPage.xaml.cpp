@@ -16,9 +16,19 @@ using namespace winrt::Microsoft::UI::Xaml;
 
 namespace winrt::RomDownloader::implementation
 {
-    BlankPage::BlankPage()
+    BlankPage::BlankPage(winrt::Microsoft::UI::Xaml::Window const& window)
     {
         InitializeComponent();
+        if (window != nullptr)
+        {
+            SetPrimaryWindow(window);
+            m_window.SizeChanged([this](auto const&, auto const& args) {
+				USARegionRadio().MinWidth(static_cast<int32_t>(args.Size().Width * 0.075));
+				EURRegionRadio().MinWidth(static_cast<int32_t>(args.Size().Width * 0.075));
+				JPNRegionRadio().MinWidth(static_cast<int32_t>(args.Size().Width * 0.075));
+				DownloadRomList().Height(static_cast<int32_t>(args.Size().Height * 0.5));
+		    });
+        }
         m_frontController.DownloadSystemIcons();
         m_items = winrt::single_threaded_observable_vector<RomDownloader::RomItem>();
         m_comboItems = winrt::single_threaded_observable_vector<winrt::hstring>({L"All"});
@@ -122,9 +132,11 @@ namespace winrt::RomDownloader::implementation
     {
 		return m_comboItems;
     }
+
 #pragma endregion
 
 #pragma region Getters
+
     winrt::hstring BlankPage::GetRegion()
     {
         if (USARegionRadio().IsChecked().Value())
