@@ -10,10 +10,17 @@ namespace winrt::RomDownloader::implementation
 {
     struct BlankPage : BlankPageT<BlankPage>
     {
-        BlankPage();
+        BlankPage(winrt::Microsoft::UI::Xaml::Window const& window);
 
         Controllers::ButtonController m_buttonController;
 		Controllers::FrontController m_frontController;
+
+        event_token PropertyChanged(
+            Microsoft::UI::Xaml::Data::PropertyChangedEventHandler const& handler);
+
+        void PropertyChanged(event_token const& token) noexcept;
+
+        void RaisePropertyChanged(winrt::hstring const& name);
 
         void SetPrimaryWindow(winrt::Microsoft::UI::Xaml::Window const& window);
         fire_and_forget DownloadFolderButtonClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args);

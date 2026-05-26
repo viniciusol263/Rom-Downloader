@@ -24,11 +24,10 @@ namespace winrt::RomDownloader::implementation
 		appWindow.Title(L"Rom Downloader");
 		appWindow.SetIcon(L"Assets/AppIcon.ico");
         appWindow.Resize({ 800,600 });
-        appWindow.Presenter().as<OverlappedPresenter>().IsResizable(false);
-        appWindow.Presenter().as<OverlappedPresenter>().IsMaximizable(false);
+        //appWindow.Presenter().as<OverlappedPresenter>().IsResizable(false);
+        //appWindow.Presenter().as<OverlappedPresenter>().IsMaximizable(false);
 
-        RomDownloader::BlankPage page;
-        page.SetPrimaryWindow(*this);
+        RomDownloader::BlankPage page(*this);
 
         this->Content(page);
     }
